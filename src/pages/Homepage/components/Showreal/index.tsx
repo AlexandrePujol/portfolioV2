@@ -3,7 +3,11 @@ import { useColorContext } from "../../../../hooks/useColorContext";
 
 import { useAnimation } from "./useAnimation";
 
-export const Showreal = () => {
+type ShowrealProps = {
+  video: string;
+};
+
+export const Showreal = ({ video: videoSrc }: ShowrealProps) => {
   const video = useRef<HTMLVideoElement>(null);
 
   const { colors } = useColorContext();
@@ -25,7 +29,7 @@ export const Showreal = () => {
         <video
           ref={video}
           className="pointer-events-none w-full h-full object-cover"
-          src="https://utfs.io/f/x0tNbNvWf7L6O4xYQ1QjgW5nQ7itrKZ30okTFqxlmyURfMBb"
+          src={videoSrc}
           loop
           muted
           autoPlay

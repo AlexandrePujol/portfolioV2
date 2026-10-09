@@ -5,7 +5,13 @@ import { useIntroAnim } from "./animations/useIntroAnim";
 import { useScrollAnim } from "./animations/useScrollAnim";
 import { Form } from "./components/Form";
 
-export const Contact = () => {
+type ContactProps = {
+  heading: string;
+  paragraph: string;
+  image: string;
+};
+
+export const Contact = ({ heading, paragraph, image }: ContactProps) => {
   const { colors } = useColorContext();
   const container = useRef<HTMLDivElement>(null);
 
@@ -28,7 +34,7 @@ export const Contact = () => {
             <img
               id="ContactImage"
               alt="placeholder"
-              src="/assets/Photos/s-eychenne-les-routes-de-mon-enfance.jpeg"
+              src={image}
               className="w-full object-cover h-full"
             />
           </div>
@@ -44,15 +50,13 @@ export const Contact = () => {
                 id="ContactHeader_Title"
                 className="text-3xl font-bold mb-2 sm:text-4xl overflow-hidden"
               >
-                {splitWords("Let's work together !")}
+                {splitWords(heading)}
               </h2>
               <div
                 id="ContactHeader_Paragraph"
                 className="font-normal leading-[110%]"
               >
-                {splitWords(
-                  "Drop me a message, and let's turn your ideas into reality. Excited to collaborate on your next creative project!"
-                )}
+                {splitWords(paragraph)}
               </div>
             </div>
             <Form />

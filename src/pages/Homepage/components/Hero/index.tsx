@@ -5,7 +5,13 @@ import { AnimLetters, AnimWords } from "../../../../components/atoms";
 import { useHasLoadedStore } from "../../../../store/useHasLoaded";
 import { HeroThree } from "./components";
 
-const HeroText = () => {
+type HeroTextProps = {
+  greeting: string;
+  firstName: string;
+  introParagraph: string;
+};
+
+const HeroText = ({ greeting, firstName, introParagraph }: HeroTextProps) => {
   const container = useRef<HTMLDivElement>(null);
   const title = useRef<HTMLHeadingElement>(null);
   const paragraph = useRef<HTMLParagraphElement>(null);
@@ -60,12 +66,16 @@ const HeroText = () => {
         className="font-extrabold text-[56px] leading-[100%] text-center z-10 md:block md:text-[160px]"
       >
         <div className="hidden md:block">
-          <AnimLetters string="HI, I'M" start={hasLoaded} delay={1.2} />
+          <AnimLetters string={greeting} start={hasLoaded} delay={1.2} />
           <br />
-          <AnimLetters string=" ALEX" start={hasLoaded} delay={1.2} />
+          <AnimLetters string={` ${firstName}`} start={hasLoaded} delay={1.2} />
         </div>
         <div className="block md:hidden">
-          <AnimLetters string="HI, I'M ALEX" start={hasLoaded} delay={1.2} />
+          <AnimLetters
+            string={`${greeting} ${firstName}`}
+            start={hasLoaded}
+            delay={1.2}
+          />
         </div>
       </h1>
 
@@ -74,7 +84,7 @@ const HeroText = () => {
         className="text-center text-base font-base leading-[130%] px-6 sm:w-[360px] z-10"
       >
         <AnimWords
-          string="I'm a passionate creative developer dedicated to turning ideas into  immersive digital experiences. From elegant websites to interactive applications."
+          string={introParagraph}
           stagger={0.01}
           delay={1.3}
           start={hasLoaded}
@@ -84,13 +94,19 @@ const HeroText = () => {
   );
 };
 
-export const Hero = () => {
+type HeroProps = HeroTextProps;
+
+export const Hero = ({ greeting, firstName, introParagraph }: HeroProps) => {
   const container = useRef<HTMLDivElement>(null);
 
   return (
     <div id="Hero" ref={container} className="relative h-screen ">
       <HeroThree />
-      <HeroText />
+      <HeroText
+        greeting={greeting}
+        firstName={firstName}
+        introParagraph={introParagraph}
+      />
     </div>
   );
 };

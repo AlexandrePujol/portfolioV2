@@ -3,12 +3,13 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { splitWords } from "../../../../utils";
 
-export const StickyText = () => {
+type StickyTextProps = {
+  phrase: string;
+};
+
+export const StickyText = ({ phrase }: StickyTextProps) => {
   const container = useRef<HTMLDivElement>(null);
   const tl = useRef<gsap.core.Timeline>();
-
-  const phrase =
-    "From Paris, France. Creative developer driven by a love for crafting digital magic. With a passion for innovative solutions, I transform ideas into captivating online experiences. ";
 
   useGSAP(
     () => {
