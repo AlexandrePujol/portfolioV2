@@ -14,3 +14,5 @@ export function createClient(config: prismic.ClientConfig = {}) {
     ...config,
   });
 }
+
+export const client = createClient();
