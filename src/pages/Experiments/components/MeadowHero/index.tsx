@@ -5,7 +5,11 @@ import { Canvas, useFrame } from "@react-three/fiber";
 
 import fragmentShader from "./shaders/fragment.glsl";
 import vertexShader from "./shaders/vertex.glsl";
-import { EffectComposer, Noise } from "@react-three/postprocessing";
+import {
+  DepthOfField,
+  EffectComposer,
+  Noise,
+} from "@react-three/postprocessing";
 
 import { useTouchTexture } from "../../../../components/three/TouchTexture";
 import { ChromaticAberrationEffect } from "../../../../components/three/PostProcessing/ChromaticAberration";
@@ -72,6 +76,14 @@ export function MeadowHero() {
       <color attach="background" args={["black"]} />
       <ambientLight intensity={0.5} />
       <Scene />
+      <EffectComposer>
+        <DepthOfField
+          focusDistance={0}
+          focalLength={0.02}
+          bokehScale={2}
+          height={480}
+        />
+      </EffectComposer>
     </Canvas>
   );
 }
