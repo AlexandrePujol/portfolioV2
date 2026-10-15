@@ -5,9 +5,13 @@ import { useEffect, useRef } from "react";
 import { FollowingProject, ProjectLine } from "..";
 import { useProjectContext } from "../../../../../../hooks/useProjectContext";
 import { useProjectMeshRect } from "../../../../../../store/useProjectMeshRect";
-import { projects } from "../../../../../../data";
+import { Project } from "../../../../../../types/custom";
 
-export const ProjectLines = () => {
+type ProjectLinesProps = {
+  projects: Project[];
+};
+
+export const ProjectLines = ({ projects }: ProjectLinesProps) => {
   const container = useRef(null);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -50,6 +54,7 @@ export const ProjectLines = () => {
               project={item}
               idx={index}
               isLast={index === projects.length - 1}
+              totalProjects={projects.length}
             />
           ))}
           <div className="block mt-10 h-full md:hidden">
@@ -71,10 +76,12 @@ export const ProjectLines = () => {
         </div>
       </div>
 
-      {hasSmoothScrollbar && (
+      {hasSmoothScrollbar && projects.length > 0 && (
         <UseCanvas>
           <StickyScrollScene track={ref} inViewportMargin="1000%">
-            {(props: any) => <FollowingProject scrollScene={props} />}
+            {(props: any) => (
+              <FollowingProject scrollScene={props} projects={projects} />
+            )}
           </StickyScrollScene>
         </UseCanvas>
       )}

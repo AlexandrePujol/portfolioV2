@@ -22,9 +22,15 @@ type Props = {
   project: Project;
   idx: number;
   isLast: boolean;
+  totalProjects: number;
 };
 
-export const ProjectLine = ({ project, idx, isLast }: Props) => {
+export const ProjectLine = ({
+  project,
+  idx,
+  isLast,
+  totalProjects,
+}: Props) => {
   const formattedIdx = (idx + 1).toString().padStart(2, "0");
   const { colors } = useColorContext();
 
@@ -38,7 +44,7 @@ export const ProjectLine = ({ project, idx, isLast }: Props) => {
 
   const handleMouseEnter = () => {
     setCursorStyle("none");
-    scrollToProject(idx);
+    scrollToProject(idx, totalProjects);
     hoverTl.current?.play();
     setSelectedProject(project);
   };
@@ -49,7 +55,7 @@ export const ProjectLine = ({ project, idx, isLast }: Props) => {
   };
 
   useProjectLineIntro(container);
-  useProjectLineScrollAnimation(shadowLine, project, idx);
+  useProjectLineScrollAnimation(shadowLine, project, idx, totalProjects);
   const hoverTl = useProjectLineHover(container);
 
   return (

@@ -11,15 +11,16 @@ import { useGSAP } from "@gsap/react";
 import gsap, { Expo, Power3 } from "gsap";
 
 // Data + Types
-import { projects, projectsData } from "../../data";
 import { useColorContext } from "../../hooks/useColorContext";
-import { ProjectData } from "../../types/custom";
+import { usePrismicProject } from "../../hooks/usePrismicProject";
+import { usePrismicProjects } from "../../hooks/usePrismicProjects";
 
 export default function Project() {
   const container = useRef<HTMLDivElement>(null);
   const { slug } = useParams<{ slug: string }>();
   const { colors } = useColorContext();
-  const projectData = projectsData[slug!] as ProjectData;
+  const { projectData, notFound } = usePrismicProject(slug);
+  const { projects } = usePrismicProjects();
 
   // I need to get the index of the project in the array
   const projectIndex = projects.findIndex((project) => project.slug === slug);
@@ -72,18 +73,18 @@ export default function Project() {
       );
       tl.to(images, { opacity: 1, y: 0, rotate: 0 }, "<0.2");
     },
-    { scope: container, dependencies: [slug] }
+    { scope: container, dependencies: [slug, projectData] }
   );
 
-  if (!slug || !projectsData[slug]) {
+  if (notFound) {
     return (
-      <>
-        <div className="h-screen relative px-5 pt-[128px]">
-          Project not found
-        </div>
-      </>
+      <div className="h-screen relative px-5 pt-[128px]">
+        Project not found
+      </div>
     );
   }
+
+  if (!projectData) return null;
 
   return (
     <div ref={container} className="min-h-screen relative">
@@ -110,16 +111,18 @@ export default function Project() {
         </div>
       </header>
       <ProjectContent data={projectData} />
-      <footer className="relative w-full mt-6 md:mt-10 h-[50vh]">
-        <NavLink
-          className="absolute inset-0 z-10"
-          to={`/projects/${nextProject.slug}`}
-        />
-        <img className="h-full w-full object-cover" src={nextProject.img} />
-        <h3 className="absolute inset-0 flex justify-center items-center text-3xl font-semibold text-white">
-          NEXT PROJECT
-        </h3>
-      </footer>
+      {nextProject && (
+        <footer className="relative w-full mt-6 md:mt-10 h-[50vh]">
+          <NavLink
+            className="absolute inset-0 z-10"
+            to={`/projects/${nextProject.slug}`}
+          />
+          <img className="h-full w-full object-cover" src={nextProject.img} />
+          <h3 className="absolute inset-0 flex justify-center items-center text-3xl font-semibold text-white">
+            NEXT PROJECT
+          </h3>
+        </footer>
+      )}
       <div
         className="intro-layer fixed inset-0 top-0 left-0 shadow-sm"
         style={{ background: colors.secondaryColor }}

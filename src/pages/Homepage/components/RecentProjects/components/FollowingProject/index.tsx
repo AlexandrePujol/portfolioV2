@@ -5,22 +5,23 @@ import * as THREE from "three";
 import { useFrame, useLoader } from "@react-three/fiber";
 
 import { ScrollSceneChildProps } from "@14islands/r3f-scroll-rig";
-import { projects } from "../../../../../../data";
 import { useUpdateTexture } from "./animations";
 
 import { useTouchTexture } from "../../../../../../components/three/TouchTexture";
 import { useWindowSize } from "../../../../../../hooks";
 import { useProjectMeshRect } from "../../../../../../store/useProjectMeshRect";
 import { useLoadingProgress } from "../../../../../../store/useLoadingProgress";
+import { Project } from "../../../../../../types/custom";
 
 import fragment from "./shaders/fragment.glsl";
 import vertex from "./shaders/vertex.glsl";
 
 type Props = {
   scrollScene?: ScrollSceneChildProps;
+  projects: Project[];
 };
 
-export const FollowingProject = ({ scrollScene }: Props) => {
+export const FollowingProject = ({ scrollScene, projects }: Props) => {
   const ref = useRef<THREE.Mesh>(null);
   const shader = useRef<THREE.ShaderMaterial>(null);
 
@@ -134,6 +135,7 @@ export const FollowingProject = ({ scrollScene }: Props) => {
     textures,
     mixFactor,
     setMixFactor,
+    projects,
   });
 
   useGSAP(() => {

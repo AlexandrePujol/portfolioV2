@@ -5,27 +5,34 @@ import gsap, { Expo, Power3 } from "gsap";
 import { AnimLetters } from "../../../../components/atoms";
 import { useColorContext } from "../../../../hooks/useColorContext";
 
+type RichTextSpan = { type: string; start: number; end: number };
+type RichTextBlock = { text: string; spans?: RichTextSpan[] };
+
 const Highlight = ({ children }: { children: React.ReactNode }) => (
   <span className="font-semibold">{children}</span>
 );
 
-const techsArray = [
-  "TypeScript",
-  "React.js",
-  "Next.js",
-  "Tailwind CSS",
-  "Framer Motion",
-  "GSAP",
-  "Prisma",
-  "tRPC",
-  "GraphQL",
-  "Zod",
-  "Three.js",
-  "React-Three-Fiber",
-  "Figma",
-  "GitHub",
-  "GitLab",
-];
+// Matches the paragraph-specific styling the copy used to be hardcoded with.
+const DESCRIPTION_CLASSNAMES = ["text-justify text-sm mb-4 md:text-base", "md:text-[14px]"];
+
+const renderWithBoldSpans = (block: RichTextBlock) => {
+  const spans = (block.spans ?? [])
+    .filter((span) => span.type === "strong")
+    .sort((a, b) => a.start - b.start);
+
+  const nodes: React.ReactNode[] = [];
+  let cursor = 0;
+  spans.forEach((span, idx) => {
+    if (span.start > cursor) nodes.push(block.text.slice(cursor, span.start));
+    nodes.push(
+      <Highlight key={idx}>{block.text.slice(span.start, span.end)}</Highlight>
+    );
+    cursor = span.end;
+  });
+  if (cursor < block.text.length) nodes.push(block.text.slice(cursor));
+
+  return nodes;
+};
 
 const TechPill = ({
   text,
@@ -42,7 +49,21 @@ const TechPill = ({
   </div>
 );
 
-export const AboutMe = () => {
+type AboutMeProps = {
+  marqueeText: string;
+  portrait: string;
+  description: RichTextBlock[];
+  stackTitle: string;
+  techStack: string[];
+};
+
+export const AboutMe = ({
+  marqueeText,
+  portrait,
+  description,
+  stackTitle,
+  techStack,
+}: AboutMeProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const { colors } = useColorContext();
   const [isStackAnimated, setIsStackAnimated] = useState(false);
@@ -81,7 +102,7 @@ export const AboutMe = () => {
   return (
     <div id="About" className="relative pb-5 px-5">
       <div className="pt-10 pb-6 md:pb-14 ">
-        <Marquee text="ABOUT ME" direction={1} />
+        <Marquee text={marqueeText} direction={1} />
       </div>
       <div
         ref={ref}
@@ -94,44 +115,19 @@ export const AboutMe = () => {
           <img
             className="h-40 w-full md:h-full object-cover"
             alt="portrait of Alex, the developer we're talking about here"
-            src="https://viz1risw7o.ufs.sh/f/x0tNbNvWf7L6gxPAZgX7uwKTALhUXFxjOEWvyHartPDzflVN"
+            src={portrait}
           />
         </div>
 
         <div id="About_Description" className="md:col-span-2">
-          <p className="text-justify text-sm mb-4 md:text-base">
-            In a previous life, I worked in the music industry, navigating the
-            worlds of marketing and sales. From that time, I’ve carried over a
-            deep sense of <Highlight>curiosity</Highlight>, a constant drive to{" "}
-            <Highlight>improve</Highlight>, and a genuine love for{" "}
-            <Highlight>collaboration</Highlight>.
-          </p>
-          <p className="md:text-[14px]">
-            Today, I’m a developer based in Paris, passionate about{" "}
-            <Highlight>creating interfaces that spark</Highlight> — with subtle
-            details, bold animations, and a strong focus on{" "}
-            <Highlight>performance</Highlight>. I believe animations are only as
-            good as the design they enhance, and I’m always looking to push the
-            experience further. My favorite playgrounds are{" "}
-            <Highlight>GSAP and shaders</Highlight>. I’ve explored them through
-            various interactive experiments, and I’ve even started sharing what
-            I’ve learned through articles and tutorials (soon to be published
-            here).
-          </p>
-          <p>
-            I work with all kinds of clients — from startups to digital agencies
-            — and whether I’m in their office or working remotely, I always
-            bring the same energy and attention to detail.
-          </p>
-          <p>
-            Outside of development, you’ll probably find me reading literature,
-            swimming laps, or watching contemporary theatre. I also play chess —
-            badly (730 ELO and proudly stuck there) — but I keep coming back for
-            more.
-          </p>
+          {description.map((block, idx) => (
+            <p key={idx} className={DESCRIPTION_CLASSNAMES[idx] ?? ""}>
+              {renderWithBoldSpans(block)}
+            </p>
+          ))}
           <h3 id="About_Stack-title" className="mt-10 mb-2 font-bold text-4xl">
             <AnimLetters
-              string="Techs I love to use"
+              string={stackTitle}
               start={isStackAnimated}
               stagger={0.01}
               delay={0}
@@ -141,7 +137,7 @@ export const AboutMe = () => {
             id="About_Stack-pills"
             className="flex flex-wrap gap-y-2 gap-x-4"
           >
-            {techsArray.map((tech, idx) => (
+            {techStack.map((tech, idx) => (
               <TechPill
                 key={idx}
                 text={tech}

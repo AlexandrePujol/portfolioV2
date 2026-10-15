@@ -3,13 +3,14 @@ import * as THREE from "three";
 import gsap, { Power3 } from "gsap";
 
 import { useProjectContext } from "../../../../../../../hooks/useProjectContext";
-import { projects } from "../../../../../../../data";
+import { Project } from "../../../../../../../types/custom";
 
 type Props = {
   shader: THREE.ShaderMaterial | null;
   textures: THREE.Texture[];
   mixFactor: { value: number };
   setMixFactor: (value: { value: number }) => void;
+  projects: Project[];
 };
 
 export const useUpdateTexture = ({
@@ -17,6 +18,7 @@ export const useUpdateTexture = ({
   textures,
   mixFactor,
   setMixFactor,
+  projects,
 }: Props) => {
   const { selectedProject } = useProjectContext();
 

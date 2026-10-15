@@ -9,7 +9,23 @@ import Lines from "../../../../components/three/Lines";
 import { AnimLink } from "../../../../components/atoms";
 import { useColorContext } from "../../../../hooks/useColorContext";
 
-export const Footer = () => {
+type SocialLink = { label: string; href: string };
+
+type FooterProps = {
+  email: string;
+  address: string;
+  phone: string;
+  socialLinks: SocialLink[];
+  copyrightText: string;
+};
+
+export const Footer = ({
+  email,
+  address,
+  phone,
+  socialLinks,
+  copyrightText,
+}: FooterProps) => {
   const { colors } = useColorContext();
   const ref = useRef<HTMLDivElement>(null);
   const { hasSmoothScrollbar } = useScrollRig();
@@ -20,21 +36,24 @@ export const Footer = () => {
       style={{ backgroundColor: colors.secondaryColor }}
     >
       <div className="flex flex-col gap-1 justify-between md:flex-row">
-        <a>pujol.alexandre@hotmail.fr</a>
-        <p>51 T Rue Piat, 75020, PARIS</p>
+        <a>{email}</a>
+        <p>{address}</p>
         <div className="flex justify-between">
-          <p>(+ 33) 6 03 53 11 63</p>{" "}
-          <div className="block md:hidden overflow-hidden">
-            <AnimLink href="instagram.com">Instagram</AnimLink>
-          </div>
+          <p>{phone}</p>{" "}
+          {socialLinks[0] && (
+            <div className="block md:hidden overflow-hidden">
+              <AnimLink href={socialLinks[0].href}>
+                {socialLinks[0].label}
+              </AnimLink>
+            </div>
+          )}
         </div>
         <ul className="hidden md:flex items-center md:gap-[16px] lggap-[80px]">
-          <AnimLink href="https://www.instagram.com/serotoninene/?hl=fr">
-            Instagram
-          </AnimLink>
-          <AnimLink href="https://www.malt.fr/profile/alexandrepujol?q=alexandre+pujol&sourceComponent=home_unlogged&searchid=65aea466d6258e0da5f71775">
-            Malt
-          </AnimLink>
+          {socialLinks.map((link) => (
+            <AnimLink key={link.label} href={link.href}>
+              {link.label}
+            </AnimLink>
+          ))}
         </ul>
       </div>
 
@@ -55,7 +74,7 @@ export const Footer = () => {
 
       <div className="grid grid-cols-3">
         <a>Privacy Policy</a>
-        <p className="text-center">@Alexandre Pujol, 2024</p>
+        <p className="text-center">{copyrightText}</p>
         <a className="text-end">Terms and Conditions</a>
       </div>
     </div>

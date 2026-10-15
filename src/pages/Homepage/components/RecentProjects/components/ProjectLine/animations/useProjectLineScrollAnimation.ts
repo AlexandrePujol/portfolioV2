@@ -1,6 +1,5 @@
 import { RefObject, useEffect, useRef } from "react";
 import { useProjectContext } from "../../../../../../../hooks/useProjectContext";
-import { projects } from "../../../../../../../data";
 
 import gsap, { Power3 } from "gsap";
 import { Project } from "../../../../../../../types/custom";
@@ -8,7 +7,8 @@ import { Project } from "../../../../../../../types/custom";
 export const useProjectLineScrollAnimation = (
   shadowLine: RefObject<HTMLDivElement | null>,
   project: Project,
-  idx: number
+  idx: number,
+  totalProjects: number
 ) => {
   const tl = useRef<gsap.core.Timeline>();
 
@@ -22,8 +22,8 @@ export const useProjectLineScrollAnimation = (
     tl.current = gsap.timeline({
       scrollTrigger: {
         trigger: "#ProjectLines",
-        start: `${(idx / (projects.length + 1)) * 100}% top`,
-        end: `${((idx + 1) / (projects.length + 1)) * 100}% top`,
+        start: `${(idx / (totalProjects + 1)) * 100}% top`,
+        end: `${((idx + 1) / (totalProjects + 1)) * 100}% top`,
         toggleActions: "play reverse play reverse",
         onEnter: handleSelectProject,
         onEnterBack: handleSelectProject,

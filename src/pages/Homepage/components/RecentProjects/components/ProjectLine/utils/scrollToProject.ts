@@ -1,7 +1,6 @@
-import { projects } from "../../../../../../../data";
 import gsap from "gsap";
 
-const scrollToProject = (idx: number) => {
+const scrollToProject = (idx: number, totalProjects: number) => {
   const projectsContainer = document.getElementById("ProjectLines");
 
   if (!projectsContainer) return;
@@ -12,8 +11,8 @@ const scrollToProject = (idx: number) => {
 
   const scrollToPosition =
     containerTop +
-    (idx / projects.length) * containerHeight +
-    (containerHeight / projects.length) * 0.1;
+    (idx / totalProjects) * containerHeight +
+    (containerHeight / totalProjects) * 0.1;
 
   gsap.to(window, {
     duration: 0.8,

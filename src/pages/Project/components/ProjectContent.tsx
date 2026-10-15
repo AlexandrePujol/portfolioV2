@@ -101,8 +101,14 @@ const ProjectParagraph = ({ content }: ParagraphProps) => {
 
 export function ProjectContent({ data }: { data: ProjectData }) {
   const { video, photos, paragraphs } = data;
-  // We chunk the photos into groups of 3
-  const photoChunks = photos.reduce((chunks: string[][], photo, index) => {
+  const leadPhoto = photos[0];
+  // With a video, photos[0] is just the poster behind it, so the gallery
+  // below still shows the full list as originally intended. Without a video,
+  // photos[0] is the only thing displayed in the intro block, so it's
+  // dropped here to avoid showing it a second time.
+  const galleryPhotos = video ? photos : photos.slice(1);
+  // We chunk the gallery photos into groups of 3
+  const photoChunks = galleryPhotos.reduce((chunks: string[][], photo, index) => {
     if (index % 3 === 0) {
       // start a new chunk every 3 photos
       chunks.push([]);
@@ -122,14 +128,21 @@ export function ProjectContent({ data }: { data: ProjectData }) {
     <div className="grid grid-cols-2 gap-3 px-3 md:px-5 md:gap-6 mt-10 md:mt-32">
       {/* INTRO ALWAYS STAYS LIKE THIS */}
       <div className="h-[calc(100vw*9/16)] border col-span-2 overflow-hidden">
-        <video
-          src={video}
-          poster={photos[0]}
-          className="w-full h-full object-cover opacity-0"
-          autoPlay
-          playsInline
-          loop
-        />
+        {video ? (
+          <video
+            src={video}
+            poster={leadPhoto}
+            className="w-full h-full object-cover opacity-0"
+            autoPlay
+            playsInline
+            loop
+          />
+        ) : (
+          <img
+            className="w-full h-full object-cover opacity-0"
+            src={leadPhoto}
+          />
+        )}
       </div>
       <div className="col-span-2 my-10">
         <ProjectParagraph content={paragraphs![0]} />
