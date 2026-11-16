@@ -73,7 +73,7 @@ export const Layout = ({ children }: Props) => {
             >
               <Lights />
               <Noise />
-              <Perf position="top-left" />
+              {import.meta.env.DEV && <Perf position="top-left" />}
             </GlobalCanvas>
           </div>
           <ColorButton />
