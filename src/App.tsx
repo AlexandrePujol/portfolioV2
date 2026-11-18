@@ -1,6 +1,12 @@
 import gsap, { Power4 } from "gsap";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 
 import { Layout } from "./components/organisms";
 import { ColorProvider } from "./contexts/ColorContext";
@@ -75,17 +81,25 @@ const PageTransition = () => {
         <Route
           path="/experiments"
           element={
-            <Layout>
-              <Experiments />
-            </Layout>
+            import.meta.env.DEV ? (
+              <Layout>
+                <Experiments />
+              </Layout>
+            ) : (
+              <Navigate to="/" replace />
+            )
           }
         />
         <Route
           path="/experiments/:id"
           element={
-            <Layout>
-              <ExperimentLayout />
-            </Layout>
+            import.meta.env.DEV ? (
+              <Layout>
+                <ExperimentLayout />
+              </Layout>
+            ) : (
+              <Navigate to="/" replace />
+            )
           }
         />
       </Routes>
