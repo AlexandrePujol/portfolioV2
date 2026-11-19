@@ -5,8 +5,6 @@ import { useEffect, useRef } from "react";
 import { FollowingProject, ProjectLine } from "..";
 import { useProjectContext } from "../../../../../../hooks/useProjectContext";
 import { useProjectMeshRect } from "../../../../../../store/useProjectMeshRect";
-import { useLoadingProgress } from "../../../../../../store/useLoadingProgress";
-import { useMediaQuery } from "../../../../../../hooks";
 import { Project } from "../../../../../../types/custom";
 
 type ProjectLinesProps = {
@@ -21,13 +19,6 @@ export const ProjectLines = ({ projects }: ProjectLinesProps) => {
   const { hasSmoothScrollbar } = useScrollRig();
 
   const { selectedProject } = useProjectContext();
-  const isMobile = useMediaQuery(768);
-  const setProgress = useLoadingProgress((state) => state.setProgress);
-
-  // FollowingProject drives the loader's progress; on mobile (no smooth scroll) it never mounts, so finish the loader here
-  useEffect(() => {
-    if (isMobile || projects.length === 0) setProgress(1, 1);
-  }, [isMobile, projects.length]);
 
   const handleSetRect = () => {
     const rect = ref.current?.getBoundingClientRect();

@@ -1,11 +1,10 @@
-import { Float } from "@react-three/drei";
+import { Float, useProgress } from "@react-three/drei";
 
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { BufferGeometry, MathUtils, Mesh } from "three";
 
 import gsap from "gsap";
-import { useLoadingProgress } from "../../../store/useLoadingProgress";
 
 type Props = {
   scale?: vec3;
@@ -16,7 +15,7 @@ type Props = {
 export const Logo = ({ scale, inViewport, geometry }: Props) => {
   const ref = useRef<Mesh>(null);
   const tl = useRef<gsap.core.Timeline>();
-  const { isLoading } = useLoadingProgress();
+  const { progress } = useProgress();
 
   const targetRotationY = useRef(1.6);
   const targetRotationX = useRef(-0.2);
@@ -32,10 +31,10 @@ export const Logo = ({ scale, inViewport, geometry }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (!isLoading) {
+    if (progress === 100) {
       tl.current?.play();
     }
-  }, [isLoading]);
+  }, [progress]);
 
   useFrame(({ pointer }) => {
     if (!ref.current || !inViewport) return;
